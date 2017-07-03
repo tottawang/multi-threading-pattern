@@ -6,6 +6,7 @@ import java.util.Vector;
 public class ThreadPool {
 
   private int size;
+  private int created;
   private List<PThread> idleThreads;
 
   public ThreadPool(int size) {
@@ -13,18 +14,25 @@ public class ThreadPool {
     this.size = size;
   }
 
-  public void start(Runnable task) throws InterruptedException {
-    if (idleThreads.isEmpty()) {
-      wait();
+  public synchronized void start(Runnable task) throws InterruptedException {
+    if (!idleThreads.isEmpty()) {
+      PThread thread = idleThreads.get(0);
+      thread.setTarget(task);
+      idleThreads.remove(0);
+    } else {
+      if (created < size) {
+        PThread newThread = new PThread(this);
+        newThread.setTarget(task);
+        newThread.start();
+        created++;
+      } else {
+        wait();
+      }
     }
-
-    // TODO is that okay to pick up first one
-    PThread thread = idleThreads.get(0);
-    thread.setTarget(task);
-    idleThreads.remove(0);
   }
 
-  public void repool(PThread thread) {
+  public synchronized void repool(PThread thread) {
     idleThreads.add(thread);
+    notifyAll();
   }
 }

@@ -10,7 +10,7 @@ public class SampleTask implements Runnable {
 
   @Override
   public void run() {
-    System.out.println("Execute task: " + taskId);
+    System.out.println("[" + Thread.currentThread().getName() + "] " + "Execute task: " + taskId);
   }
 
 }

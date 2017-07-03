@@ -17,13 +17,26 @@ public class PThread extends Thread {
   @Override
   public void run() {
     while (true) {
-      isIdle = false;
-      if (target != null) {
-        target.run();
-        // task complete
-        isIdle = true;
-      }
-      threadPool.repool(this);
+      runTarget();
     }
+  }
+
+  private void runTarget() {
+    if (target != null) {
+      isIdle = false;
+      try {
+        target.run();
+      } catch (Throwable e) {
+        e.printStackTrace();
+      } finally {
+        repool();
+      }
+    }
+  }
+
+  private void repool() {
+    this.target = null;
+    this.isIdle = true;
+    this.threadPool.repool(this);
   }
 }
