@@ -20,6 +20,4 @@ public class LockCounter implements Counter {
     return this.counter;
   }
 
-
-
 }
