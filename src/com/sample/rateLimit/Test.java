@@ -5,9 +5,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
+
+  Semaphore semaphore;
 
   public static void main(String[] args) throws InterruptedException, ExecutionException {
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
