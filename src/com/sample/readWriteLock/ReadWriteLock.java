@@ -12,7 +12,7 @@ public class ReadWriteLock {
   private int readCount;
 
   public synchronized void lockWrite() throws InterruptedException {
-    if (writeCount == 0 || readCount == 0) {
+    while (writeCount == 0 || readCount == 0) {
       wait();
     }
     writeCount++;
@@ -23,13 +23,11 @@ public class ReadWriteLock {
       throw new RuntimeException("invalid write lock counter");
     }
     writeCount--;
-    if (writeCount == 0) {
-      notifyAll();
-    }
+    notifyAll();
   }
 
   public synchronized void lockRead() throws InterruptedException {
-    if (writeCount != 0) {
+    while (writeCount != 0) {
       wait();
     }
     readCount++;
@@ -37,6 +35,7 @@ public class ReadWriteLock {
 
   public synchronized void unlockRead() {
     readCount--;
+    notifyAll();
   }
 
 }
