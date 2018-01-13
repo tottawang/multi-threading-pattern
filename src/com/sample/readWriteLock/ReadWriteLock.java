@@ -27,6 +27,9 @@ public class ReadWriteLock {
   }
 
   public synchronized void lockRead() throws InterruptedException {
+
+    // writeRequests++; not sure about the benefit
+
     while (writeCount != 0) {
       wait();
     }
